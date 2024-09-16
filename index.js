@@ -25,6 +25,19 @@ app.get('/photos', async (request, response) => {
     }
 })
 
+app.get('/photos/:id', async (request, response) => {
+    const { id } = request.params
+
+    try {
+        const photos = await Photo.findById(id)
+
+        return response.status(200).json(photos)
+    } catch (error) {
+        console.log(error.message)
+        response.status(500).send({ message: error.message })
+    }
+})
+
 app.post('/photos', async (request, response) => {
     try {
         if (!request.body.photoUrl) {
