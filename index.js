@@ -29,9 +29,31 @@ app.get('/photos/:id', async (request, response) => {
     const { id } = request.params
 
     try {
-        const photos = await Photo.findById(id)
+        const photo = await Photo.findById(id)
+
+        if (!photo) {
+            return response.status(404).json({ message: 'Photo not found' })
+        }
 
         return response.status(200).json(photos)
+    } catch (error) {
+        console.log(error.message)
+        response.status(500).send({ message: error.message })
+    }
+})
+
+app.put('/photos/:id', async (request, response) => {
+    const { id } = request.params
+    const { body } = request.body
+
+    try {
+        const photo = await Photo.findByIdAndUpdate(id, body, { new: true })
+
+        if (!photo) {
+            return response.status(404).json({ message: 'Photo not found' })
+        }
+
+        return response.status(200).json(photo)
     } catch (error) {
         console.log(error.message)
         response.status(500).send({ message: error.message })
@@ -54,6 +76,24 @@ app.post('/photos', async (request, response) => {
         const photo = await Photo.create(newPhoto)
 
         return response.status(201).send(photo)
+    } catch (error) {
+        console.log(error.message)
+        response.status(500).send({ message: error.message })
+    }
+})
+
+app.delete('/photos/:id', async (request, response) => {
+    try {
+        const { id } = request.params
+        const result = await Photo.findByIdAndDelete(id)
+
+        if (!result) {
+            return response.status(404).json({ message: 'Photo not found' })
+        }
+
+        return response
+            .status(200)
+            .send({ message: 'Photo successfully deleted' })
     } catch (error) {
         console.log(error.message)
         response.status(500).send({ message: error.message })
