@@ -5,12 +5,23 @@ const router = express.Router()
 
 router.get('/', async (request, response) => {
     try {
-        const photos = await Photo.find({})
+        const page = parseInt(request.query.page) || 1
+        const limit = parseInt(request.query.limit) || 100
 
-        return response.status(200).json(photos)
+        const photos = await Photo.find()
+            .skip((page - 1) * limit)
+            .limit(limit)
+
+        const totalPages = Math.ceil((await Photo.countDocuments()) / limit)
+
+        return response
+            .status(200)
+            .json({ photos, currentPage: page, totalPages })
     } catch (error) {
         console.log(error.message)
-        response.status(500).send({ message: error.message })
+        response
+            .status(500)
+            .send({ message: 'Error getting photo', error: error.message })
     }
 })
 
@@ -27,7 +38,9 @@ router.get('/:id', async (request, response) => {
         return response.status(200).json(photos)
     } catch (error) {
         console.log(error.message)
-        response.status(500).send({ message: error.message })
+        response
+            .status(500)
+            .send({ message: 'Error getting photo', error: error.message })
     }
 })
 
@@ -49,7 +62,9 @@ router.post('/', async (request, response) => {
         return response.status(201).send(photo)
     } catch (error) {
         console.log(error.message)
-        response.status(500).send({ message: error.message })
+        response
+            .status(500)
+            .send({ message: 'Error creating photo', error: error.message })
     }
 })
 
@@ -67,7 +82,9 @@ router.put('/:id', async (request, response) => {
         }
     } catch (error) {
         console.log(error.message)
-        response.status(500).send({ message: error.message })
+        response
+            .status(500)
+            .send({ message: 'Error updating photo', error: error.message })
     }
 })
 
@@ -85,7 +102,9 @@ router.delete('/:id', async (request, response) => {
             .send({ message: 'Photo successfully deleted' })
     } catch (error) {
         console.log(error.message)
-        response.status(500).send({ message: error.message })
+        response
+            .status(500)
+            .send({ message: 'Error deleting photo', error: error.message })
     }
 })
 
