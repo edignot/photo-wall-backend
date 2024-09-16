@@ -21,7 +21,7 @@ router.get('/', async (request, response) => {
         console.log(error.message)
         response
             .status(500)
-            .send({ message: 'Error fetching photos', error: error.message })
+            .json({ message: 'Error fetching photos', error: error.message })
     }
 })
 
@@ -31,66 +31,71 @@ router.get('/:id', async (request, response) => {
     try {
         const photo = await Photo.findById(id)
 
-        if (!photo) {
+        if (photo) {
+            return response.status(200).json({ data: photo })
+        } else {
             return response.status(404).json({ message: 'Photo not found' })
         }
-
-        return response.status(200).json(photo)
     } catch (error) {
         console.log(error.message)
         response
             .status(500)
-            .send({ message: 'Error fetching photo', error: error.message })
+            .json({ message: 'Error fetching photo', error: error.message })
     }
 })
 
 router.post('/', async (request, response) => {
     try {
         if (!request.body.photoUrl) {
-            return response.status(400).send({
-                message: 'Photo is required',
+            return response.status(400).json({
+                message: 'Photo URL is required',
             })
         }
 
         const newPhoto = {
             photoUrl: request.body.photoUrl,
-            note: request.body.note,
+            note: request.body.note || '',
         }
 
         const photo = await Photo.create(newPhoto)
 
-        return response.status(201).send(photo)
+        return response.status(201).json({ data: photo })
     } catch (error) {
         console.log(error.message)
         response
             .status(500)
-            .send({ message: 'Error creating photo', error: error.message })
+            .json({ message: 'Error creating photo', error: error.message })
     }
 })
 
-router.put('/:id', async (request, response) => {
-    try {
-        const { id } = request.params
-        const result = await Photo.findByIdAndUpdate(id, request.body)
+router.patch('/:id', async (request, response) => {
+    const { id } = request.params
+    const { note } = request.body
 
-        if (!result) {
+    try {
+        const updatedPhoto = await Photo.findByIdAndUpdate(
+            id,
+            { note },
+            { new: true }
+        )
+
+        if (!updatedPhoto) {
             return response.status(404).json({ message: 'Photo not found' })
-        } else {
-            return response
-                .status(200)
-                .json({ message: 'Photo successfully updated' })
         }
+
+        return response.status(200).json({ data: updatedPhoto })
     } catch (error) {
         console.log(error.message)
         response
             .status(500)
-            .send({ message: 'Error updating photo', error: error.message })
+            .json({ message: 'Error updating photo', error: error.message })
     }
 })
 
 router.delete('/:id', async (request, response) => {
+    const { id } = request.params
+
     try {
-        const { id } = request.params
         const result = await Photo.findByIdAndDelete(id)
 
         if (!result) {
@@ -99,12 +104,12 @@ router.delete('/:id', async (request, response) => {
 
         return response
             .status(200)
-            .send({ message: 'Photo successfully deleted' })
+            .json({ message: 'Photo successfully deleted' })
     } catch (error) {
         console.log(error.message)
         response
             .status(500)
-            .send({ message: 'Error deleting photo', error: error.message })
+            .json({ message: 'Error deleting photo', error: error.message })
     }
 })
 
