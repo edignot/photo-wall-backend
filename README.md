@@ -23,117 +23,140 @@ http://localhost:8000/photos
 
 ### 1. Get All Photos
 
--   Method: GET
--   URL: /
--   Query Parameters:
-    -   page (optional): The page number for pagination. Defaults to 1.
-    -   limit (optional): The number of photos per page. Defaults to 100.
--   Response:
-    -   Status: 200 OK
-    -   Body:
+-   **Method**: `GET`
+-   **URL**: `/`
+-   **Query Parameters**:
+    -   `page` (optional): The page number for pagination. Defaults to 1.
+    -   `limit` (optional): The number of photos per page. Defaults to 100.
+-   **Response**:
+    -   **Status**: `200 OK`
+    -   **Body**:
+        ```json
         {
-        "photos": [
-        {
-        "_id": "photo_id",
-        "note": "note",
-        "photoUrl": "photo_url"
-        },
-        ...
-        ],
-        "currentPage": 1,
-        "totalPages": 3
+          "photos": [
+            {
+              "_id": "photo_id",
+              "note": "note",
+              "photoUrl": "photo_url"
+            },
+            ...
+          ],
+          "currentPage": 1,
+          "totalPages": 3
         }
+        ```
+
+---
 
 ### 2. Get Photo by ID
 
--   Method: GET
--   URL: /:id
--   Path Parameters:
-    -   id: The ID of the photo.
--   Response:
-    -   Status: 200 OK
-    -   Body:
+-   **Method**: `GET`
+-   **URL**: `/:id`
+-   **Path Parameters**:
+    -   `id`: The ID of the photo.
+-   **Response**:
+    -   **Status**: `200 OK`
+    -   **Body**:
+        ```json
         {
-        "data": {
-        "\_id": "photo_id",
-        "note": "note",
-        "photoUrl": "photo_url"
+            "data": {
+                "_id": "photo_id",
+                "note": "note",
+                "photoUrl": "photo_url"
+            }
         }
-        }
-    -   Status: 404 Not Found
-    -   Body:
+        ```
+    -   **Status**: `404 Not Found`
+    -   **Body**:
+        ```json
         {
-        "message": "Photo not found"
+            "message": "Photo not found"
         }
+        ```
+
+---
 
 ### 3. Create a New Photo
 
--   Method: POST
--   URL: /
--   Request Body:
+-   **Method**: `POST`
+-   **URL**: `/`
+-   **Request Body**:
+    ```json
     {
-    "photoUrl": "photo_url",
-    "note": "note"
-    }
--   Response:
-    -   Status: 201 Created
-    -   Body:
-        {
-        "data": {
-        "\_id": "photo_id",
         "note": "note",
         "photoUrl": "photo_url"
-        }
-        }
-    -   Status: 400 Bad Request
-    -   Body:
+    }
+    ```
+-   **Response**:
+    -   **Status**: `201 Created`
+    -   **Body**:
+        ```json
         {
-        "message": "Photo URL is required"
+            "data": {
+                "_id": "photo_id",
+                "note": "note",
+                "photoUrl": "photo_url"
+            }
         }
+        ```
+    -   **Status**: `400 Bad Request`
+    -   **Body**:
+        ```json
+        {
+            "message": "Photo URL is required"
+        }
+        ```
+
+---
 
 ### 4. Update a Photo
 
--   Method: PATCH
--   URL: /:id
--   Path Parameters:
-    -   id: The ID of the photo.
--   Request Body:
+-   **Method**: `PATCH`
+-   **URL**: `/:id`
+-   **Path Parameters**:
+    -   `id`: The ID of the photo.
+-   **Request Body**:
+    ```json
     {
-    "note": "updated_note"
+        "note": "updated_note"
     }
--   Response:
-    -   Status: 200 OK
-    -   Body:
+    ```
+-   **Response**:
+    -   **Status**: `200 OK`
+    -   **Body**:
+        ```json
         {
-        "data": {
-        "\_id": "photo_id",
-        "note": "updated_note",
-        "photoUrl": "photo_url"
+            "data": {
+                "_id": "photo_id",
+                "note": "updated_note",
+                "photoUrl": "photo_url"
+            }
         }
-        }
-    -   Status: 404 Not Found
-    -   Body:
+        ```
+    -   **Status**: `404 Not Found`
+    -   **Body**:
+        ```json
         {
-        "message": "Photo not found"
+            "message": "Photo not found"
         }
+        ```
+
+---
 
 ### 5. Delete a Photo
 
--   Method: DELETE
--   URL: /:id
--   Path Parameters:
+-   **Method**: `DELETE`
+-   **URL**: `/:id`
+-   **Path Parameters**:
     -   id: The ID of the photo.
--   Response:
-    -   Status: 200 OK
-    -   Body:
+-   **Response**:
+    -   **Status**: `200 OK`
+    -   **Body**:
+        ```json
         {
-        "message": "Photo successfully deleted"
+            "message": "Photo successfully deleted"
         }
-    -   Status: 404 Not Found
-    -   Body:
-        {
-        "message": "Photo not found"
-        }
+        ```
 
 ## Installation and Setup
 
